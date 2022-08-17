@@ -1,18 +1,27 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define NAMESIZE 32
+#define NAMEMAX 1024
 struct student_st
 {
     int id;
     //若有一同学的名字是50个字符，其余同学名字为10字符一下，数组不能很好的进行数据浮动
-    char name[NAMESIZE];
+    char *name;
     int math;
     int chinese;
 };
 void stu_set(struct student_st *p,const struct student_st *q)
 {
-    *p=*q;
+    // *p=*q;
+    // p->name=q->name;这样写是错误的.一旦q->name指向内容改变，p->name内容也改变
+    p->id=q->id;
+    p->name=malloc(strlen(q->name)+1);//+1存放\0
+    if(p->name==NULL)
+        exit(1);
+    strcpy(p->name,q->name);
+    p->math=q->math;
+    p->chinese=q->chinese;
+
 }
 void stu_show(struct student_st *p)
 {
@@ -20,7 +29,11 @@ void stu_show(struct student_st *p)
 }
 void stu_changename(struct student_st *p,const char *newname)
 {
+    free(p->name);
+    p->name=malloc(strlen(newname)+1);
     strcpy(p->name,newname);
+
+
 }
 void menu(void)
 {
@@ -30,7 +43,7 @@ void menu(void)
 int main()
 {
     struct student_st stu,tmp;
-    char newname[NAMESIZE];
+    char newname[NAMEMAX];
     int choice;
     int ret;
     do
@@ -42,12 +55,13 @@ int main()
             switch (choice)
             {
             case 1:
+                tmp.name=malloc(NAMEMAX);
                 printf("enter the infomrmation of student[id name math chinese]:");
                 scanf("%d%s%d%d", &tmp.id, tmp.name, &tmp.math, &tmp.chinese);
                 stu_set(&stu, &tmp);
                 break;
             case 2:
-                printf("enter new name:")
+                printf("enter new name:");
                 scanf("%s", newname);
                 stu_changename(&stu, newname);
                 break;
