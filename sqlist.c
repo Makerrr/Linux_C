@@ -23,7 +23,7 @@ sqlist *sqlist_create()
 int sqlist_insert(sqlist *me,int i,datatype *data) 
 {
     int j;
-    if(me->last==DATASIZE-1) //存储已满
+    if(me->last==DATASIZE-1) 
         return -1;
     if(i<0||i>(me->last)+1) //插入位置错误
         return -2;
